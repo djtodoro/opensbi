@@ -14,6 +14,9 @@
 #include <sbi/sbi_scratch.h>
 #include <sbi/sbi_string.h>
 
+/* Minimum size and alignment of scratch allocations */
+#define SCRATCH_ALLOC_ALIGN 64
+
 u32 last_hartindex_having_scratch = 0;
 u32 hartindex_to_hartid_table[SBI_HARTMASK_MAX_BITS + 1] = { -1U };
 struct sbi_scratch *hartindex_to_scratch_table[SBI_HARTMASK_MAX_BITS + 1] = { 0 };
@@ -70,8 +73,12 @@ unsigned long sbi_scratch_alloc_offset(unsigned long size)
 	if (!size)
 		return 0;
 
-	size += __SIZEOF_POINTER__ - 1;
-	size &= ~((unsigned long)__SIZEOF_POINTER__ - 1);
+	/*
+	 * We let the allocation align to 64 bytes to avoid livelock on
+	 * certain platforms due to atomic variables from the same cache line.
+	 */
+	size += SCRATCH_ALLOC_ALIGN - 1;
+	size &= ~((unsigned long)SCRATCH_ALLOC_ALIGN - 1);
 
 	spin_lock(&extra_lock);
 
