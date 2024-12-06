@@ -471,9 +471,6 @@ static int __fdt_parse_domain(const void *fdt, int domain_offset, void *opaque)
 		if (err)
 			continue;
 
-		if (SBI_HARTMASK_MAX_BITS <= val32)
-			continue;
-
 		if (!fdt_node_is_enabled(fdt, cpu_offset))
 			continue;
 

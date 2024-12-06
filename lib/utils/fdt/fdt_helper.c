@@ -1032,9 +1032,6 @@ int fdt_parse_aclint_node(const void *fdt, int nodeoffset,
 		if (rc)
 			continue;
 
-		if (SBI_HARTMASK_MAX_BITS <= hartid)
-			continue;
-
 		if (match_hwirq == hwirq) {
 			if (hartid < first_hartid)
 				first_hartid = hartid;
@@ -1097,9 +1094,6 @@ int fdt_parse_plmt_node(const void *fdt, int nodeoffset, unsigned long *plmt_bas
 		if (rc)
 			continue;
 
-		if (SBI_HARTMASK_MAX_BITS <= hartid)
-			continue;
-
 		if (hwirq == IRQ_M_TIMER)
 			hcount++;
 	}
@@ -1151,9 +1145,6 @@ int fdt_parse_plicsw_node(const void *fdt, int nodeoffset, unsigned long *plicsw
 		rc = fdt_parse_hart_id(fdt, cpu_offset, &hartid);
 
 		if (rc)
-			continue;
-
-		if (SBI_HARTMASK_MAX_BITS <= hartid)
 			continue;
 
 		if (hwirq == IRQ_M_SOFT)
