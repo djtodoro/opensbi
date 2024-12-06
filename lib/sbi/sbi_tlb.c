@@ -247,6 +247,7 @@ static void tlb_process(struct sbi_scratch *scratch)
 
 static void tlb_sync(struct sbi_scratch *scratch)
 {
+	int count = 0;
 	atomic_t *tlb_sync =
 			sbi_scratch_offset_ptr(scratch, tlb_sync_off);
 
@@ -256,6 +257,11 @@ static void tlb_sync(struct sbi_scratch *scratch)
 		 * consume fifo requests to avoid deadlock.
 		 */
 		tlb_process_once(scratch);
+		count++;
+		if ((count % 20) == 0) {
+			sbi_dprintf("tlb_sync loop count = %d value = %ld\n",
+				    count, atomic_read(tlb_sync));
+		}
 	}
 
 	return;
