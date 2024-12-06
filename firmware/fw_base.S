@@ -59,8 +59,16 @@ _try_lottery:
 	/* Jump to relocation wait loop if we don't get relocation lottery */
 	lla	a6, _boot_lottery
 	li	a7, BOOT_LOTTERY_ACQUIRED
+#ifndef CONFIG_RISCV_ISA_ZALRSC_ONLY
 	amoswap.w a6, a7, (a6)
 	bnez	a6, _wait_for_boot_hart
+#else
+_sc_fail:
+	lr.w	t0, (a6)
+	sc.w	t1, a7, (a6)
+	bnez	t1, _sc_fail
+	bnez	t0, _wait_for_boot_hart
+#endif
 
 	/* relocate the global table content */
 	li	t0, FW_TEXT_START	/* link start */
