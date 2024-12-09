@@ -7,6 +7,10 @@ config PLATFORM_GENERIC
 	select FDT_PMU
 	default y
 
+config RISCV_ISA_ZALRSC_ONLY
+	bool "Use lr/sc only"
+	default n
+
 if PLATFORM_GENERIC
 
 config PLATFORM_GENERIC_NAME
@@ -66,6 +70,11 @@ config PLATFORM_THEAD
 	bool "THEAD C9xx support"
 	select THEAD_C9XX_ERRATA
 	select THEAD_C9XX_PMU
+	default n
+
+config PLATFORM_MIPS_P8700
+	bool "MIPS P8700 support"
+	select RISCV_ISA_ZALRSC_ONLY
 	default n
 
 source "$(OPENSBI_SRC_DIR)/platform/generic/andes/Kconfig"

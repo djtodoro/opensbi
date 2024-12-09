@@ -44,8 +44,16 @@
 #define SBI_SCRATCH_OPTIONS_OFFSET		(13 * __SIZEOF_POINTER__)
 /** Offset of hartindex member in sbi_scratch */
 #define SBI_SCRATCH_HARTINDEX_OFFSET		(14 * __SIZEOF_POINTER__)
+#ifdef CONFIG_PLATFORM_MIPS_P8700
+#define MIPS_P8700_STW_SIZE			34
+/** Offset of stw_tmp in sbi_scratch */
+#define SBI_SCRATCH_STW_TMP_OFFSET		(15 * __SIZEOF_POINTER__)
+/** Offset of extra space in sbi_scratch */
+#define SBI_SCRATCH_EXTRA_SPACE_OFFSET		((15 + MIPS_P8700_STW_SIZE) * __SIZEOF_POINTER__)
+#else
 /** Offset of extra space in sbi_scratch */
 #define SBI_SCRATCH_EXTRA_SPACE_OFFSET		(15 * __SIZEOF_POINTER__)
+#endif
 /** Maximum size of sbi_scratch (4KB) */
 #define SBI_SCRATCH_SIZE			(0x1000)
 
@@ -87,6 +95,10 @@ struct sbi_scratch {
 	unsigned long options;
 	/** Index of the hart */
 	unsigned long hartindex;
+#ifdef CONFIG_PLATFORM_MIPS_P8700
+	/** for stw */
+	unsigned long stw_tmp[MIPS_P8700_STW_SIZE];
+#endif
 };
 
 /**

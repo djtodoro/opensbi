@@ -45,6 +45,11 @@
 	.align 3
 	.globl _start
 	.globl _start_warm
+#ifdef CONFIG_PLATFORM_MIPS_P8700
+	lla	t0, mips_cps_core_entry
+	jr	t0
+#endif
+
 _start:
 	/* Find preferred boot HART id */
 	MOV_3R	s0, a0, s1, a1, s2, a2
